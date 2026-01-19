@@ -140,7 +140,7 @@ workflow CNVSomaticPairWorkflow {
     Int preprocess_intervals_disk = ref_size + disk_pad
     call CNVTasks.PreprocessIntervals {
         input:
-            intervals = intervals,i
+            intervals = intervals,
             blacklist_intervals = blacklist_intervals,
             ref_fasta = ref_fasta,
             ref_fasta_fai = ref_fasta_fai,
