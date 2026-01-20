@@ -12,7 +12,7 @@ task PreprocessIntervals {
     String gatk_docker
     Int? mem_gb
     Int? disk_space_gb
-    Boolean? use_ssd = false
+    Boolean use_ssd = false
     Int? cpu
     Int? preemptible_attempts
 
@@ -67,7 +67,7 @@ task AnnotateIntervals {
     String gatk_docker
     Int? mem_gb
     Int? disk_space_gb
-    Boolean? use_ssd = false
+    Boolean use_ssd = false
     Int? cpu
     Int? preemptible_attempts
 
@@ -127,7 +127,7 @@ task FilterIntervals {
     String gatk_docker
     Int? mem_gb
     Int? disk_space_gb
-    Boolean? use_ssd = false
+    Boolean use_ssd = false
     Int? cpu
     Int? preemptible_attempts
 
@@ -294,7 +294,7 @@ task ScatterIntervals {
     String gatk_docker
     Int? mem_gb
     Int? disk_space_gb
-    Boolean? use_ssd = false
+    Boolean use_ssd = false
     Int? cpu
     Int? preemptible_attempts
 
@@ -373,7 +373,7 @@ task PostprocessGermlineCNVCalls {
     String gatk_docker
     Int? mem_gb
     Int? disk_space_gb
-    Boolean? use_ssd = false
+    Boolean use_ssd = false
     Int? cpu
     Int? preemptible_attempts
 
@@ -465,7 +465,7 @@ task CollectSampleQualityMetrics {
     # Runtime parameters
     Int? mem_gb
     Int? disk_space_gb
-    Boolean? use_ssd = false
+    Boolean use_ssd = false
     Int? cpu
     Int? preemptible_attempts
 
@@ -502,7 +502,7 @@ task CollectModelQualityMetrics {
     # Runtime parameters
     Int? mem_gb
     Int? disk_space_gb
-    Boolean? use_ssd = false
+    Boolean use_ssd = false
     Int? cpu
     Int? preemptible_attempts
 
