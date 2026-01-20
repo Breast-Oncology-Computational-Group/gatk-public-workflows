@@ -189,7 +189,7 @@ task CollectCounts {
     String gatk_docker
     Int? mem_gb
     Int? disk_space_gb
-    Boolean? use_ssd = false
+    Boolean use_ssd = false
     Int? cpu
     Int? preemptible_attempts
 
