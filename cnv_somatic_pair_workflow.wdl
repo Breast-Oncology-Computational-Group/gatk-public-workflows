@@ -491,7 +491,7 @@ task DenoiseReadCounts {
     String gatk_docker
     Int? mem_gb
     Int? disk_space_gb
-    Boolean? use_ssd = false
+    Boolean? use_ssd
     Int? cpu
     Int? preemptible_attempts
 
@@ -513,7 +513,7 @@ task DenoiseReadCounts {
     runtime {
         docker: "${gatk_docker}"
         memory: machine_mem_mb + " MB"
-        disks: "local-disk " + disk_space_gb + if use_ssd then " SSD" else " HDD"
+        disks: "local-disk " + disk_space_gb + if select_first([use_ssd, false]) then " SSD" else " HDD"
         cpu: select_first([cpu, 1])
         preemptible: select_first([preemptible_attempts, 5])
     }
@@ -556,7 +556,7 @@ task ModelSegments {
     String gatk_docker
     Int? mem_gb
     Int? disk_space_gb
-    Boolean? use_ssd = false
+    Boolean? use_ssd
     Int? cpu
     Int? preemptible_attempts
 
@@ -611,7 +611,7 @@ task ModelSegments {
     runtime {
         docker: "${gatk_docker}"
         memory: machine_mem_mb + " MB"
-        disks: "local-disk " + disk_space_gb + if use_ssd then " SSD" else " HDD"
+        disks: "local-disk " + disk_space_gb + if select_first([use_ssd, false]) then " SSD" else " HDD"
         cpu: select_first([cpu, 1])
         preemptible: select_first([preemptible_attempts, 5])
     }
@@ -667,7 +667,7 @@ task CallCopyRatioSegments {
     runtime {
         docker: "${gatk_docker}"
         memory: machine_mem_mb + " MB"
-        disks: "local-disk " + disk_space_gb + if use_ssd then " SSD" else " HDD"
+        disks: "local-disk " + disk_space_gb + if select_first([use_ssd, false]) then " SSD" else " HDD"
         cpu: select_first([cpu, 1])
         preemptible: select_first([preemptible_attempts, 5])
     }
@@ -717,7 +717,7 @@ task PlotDenoisedCopyRatios {
     runtime {
         docker: "${gatk_docker}"
         memory: machine_mem_mb + " MB"
-        disks: "local-disk " + disk_space_gb + if use_ssd then " SSD" else " HDD"
+        disks: "local-disk " + disk_space_gb + if select_first([use_ssd, false]) then " SSD" else " HDD"
         cpu: select_first([cpu, 1])
         preemptible: select_first([preemptible_attempts, 5])
     }
@@ -777,7 +777,7 @@ task PlotModeledSegments {
     runtime {
         docker: "${gatk_docker}"
         memory: machine_mem_mb + " MB"
-        disks: "local-disk " + disk_space_gb + if use_ssd then " SSD" else " HDD"
+        disks: "local-disk " + disk_space_gb + if select_first([use_ssd, false]) then " SSD" else " HDD"
         cpu: select_first([cpu, 1])
         preemptible: select_first([preemptible_attempts, 5])
     }
