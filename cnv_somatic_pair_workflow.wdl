@@ -1,6 +1,7 @@
 # Workflow for running the GATK CNV pipeline on a matched pair. Supports both WGS and WES.
 #
 # Notes:
+# - Parameters were changed for the ModelSegments  task to match gatk 4.0.4
 #
 # - The intervals argument is required for both WGS and WES workflows and accepts formats compatible with the
 #   GATK -L argument (see https://gatkforums.broadinstitute.org/gatk/discussion/11009/intervals-and-interval-lists).
@@ -580,8 +581,6 @@ task ModelSegments {
             --denoised-copy-ratios ${denoised_copy_ratios} \
             --allelic-counts ${allelic_counts} \
             ${"--normal-allelic-counts " + normal_allelic_counts} \
-            --minimum-total-allele-count-case ${min_total_allele_count_} \
-            --minimum-total-allele-count-normal ${default="30" min_total_allele_count_normal} \
             --genotyping-homozygous-log-ratio-threshold ${default="-10.0" genotyping_homozygous_log_ratio_threshold} \
             --genotyping-base-error-rate ${default="0.05" genotyping_base_error_rate} \
             --maximum-number-of-segments-per-chromosome ${default="1000" max_num_segments_per_chromosome} \
