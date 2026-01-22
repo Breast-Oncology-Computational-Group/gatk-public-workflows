@@ -576,7 +576,7 @@ task ModelSegments {
     command <<<
         set -e
         export GATK_LOCAL_JAR=${default="/root/gatk.jar" gatk4_jar_override}
-
+        mkdir -p ${output_dir_}
         gatk --java-options "-Xmx${command_mem_mb}m" ModelSegments \
             --denoised-copy-ratios ${denoised_copy_ratios} \
             --allelic-counts ${allelic_counts} \
