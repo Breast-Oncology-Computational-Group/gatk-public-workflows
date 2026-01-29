@@ -582,6 +582,20 @@ task ModelSegments {
         set -e
         export GATK_LOCAL_JAR=${default="/root/gatk.jar" gatk4_jar_override}
         mkdir -p ${output_dir_}
+
+        # log resource usage for debugging purposes
+        function runtimeInfo() {
+            echo 'mutect1'
+            echo [$(date)]
+            echo \* CPU usage: $(top -bn 2 -d 0.01 | grep '^%Cpu' | tail -n 1 | awk '{print $2}')%
+            echo \* Memory usage: $(free -m | grep Mem | awk '{ OFMT="%.0f"; print ($3/$2)*100; }')%
+            echo \* Disk usage: $(df | grep cromwell_root | awk '{ print $5 }')
+        }
+        while true;
+            do runtimeInfo;
+            sleep 15;
+        done &
+
         gatk --java-options "-Xmx${command_mem_mb}m" ModelSegments \
             --denoised-copy-ratios ${denoised_copy_ratios} \
             --allelic-counts ${allelic_counts} \
