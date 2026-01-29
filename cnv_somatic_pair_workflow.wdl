@@ -431,8 +431,6 @@ workflow CNVSomaticPairWorkflow {
         File het_allelic_counts_tumor = ModelSegmentsTumor.het_allelic_counts
         File normal_het_allelic_counts_tumor = ModelSegmentsTumor.normal_het_allelic_counts
         File copy_ratio_only_segments_tumor = ModelSegmentsTumor.copy_ratio_only_segments
-        File copy_ratio_legacy_segments_tumor = ModelSegmentsTumor.copy_ratio_legacy_segments
-        File allele_fraction_legacy_segments_tumor = ModelSegmentsTumor.allele_fraction_legacy_segments
         File modeled_segments_begin_tumor = ModelSegmentsTumor.modeled_segments_begin
         File copy_ratio_parameters_begin_tumor = ModelSegmentsTumor.copy_ratio_parameters_begin
         File allele_fraction_parameters_begin_tumor = ModelSegmentsTumor.allele_fraction_parameters_begin
@@ -462,8 +460,6 @@ workflow CNVSomaticPairWorkflow {
         File? het_allelic_counts_normal = ModelSegmentsNormal.het_allelic_counts
         File? normal_het_allelic_counts_normal = ModelSegmentsNormal.normal_het_allelic_counts
         File? copy_ratio_only_segments_normal = ModelSegmentsNormal.copy_ratio_only_segments
-        File? copy_ratio_legacy_segments_normal = ModelSegmentsNormal.copy_ratio_legacy_segments
-        File? allele_fraction_legacy_segments_normal = ModelSegmentsNormal.allele_fraction_legacy_segments
         File? modeled_segments_begin_normal = ModelSegmentsNormal.modeled_segments_begin
         File? copy_ratio_parameters_begin_normal = ModelSegmentsNormal.copy_ratio_parameters_begin
         File? allele_fraction_parameters_begin_normal = ModelSegmentsNormal.allele_fraction_parameters_begin
@@ -585,7 +581,7 @@ task ModelSegments {
 
         # log resource usage for debugging purposes
         function runtimeInfo() {
-            echo 'mutect1'
+            echo 'ModelSegments resource usage:'
             echo [$(date)]
             echo \* CPU usage: $(top -bn 2 -d 0.01 | grep '^%Cpu' | tail -n 1 | awk '{print $2}')%
             echo \* Memory usage: $(free -m | grep Mem | awk '{ OFMT="%.0f"; print ($3/$2)*100; }')%
@@ -638,8 +634,6 @@ task ModelSegments {
         File het_allelic_counts = "${output_dir_}/${entity_id}.hets.tsv"
         File normal_het_allelic_counts = "${output_dir_}/${entity_id}.hets.normal.tsv"
         File copy_ratio_only_segments = "${output_dir_}/${entity_id}.cr.seg"
-        File copy_ratio_legacy_segments = "${output_dir_}/${entity_id}.cr.igv.seg"
-        File allele_fraction_legacy_segments = "${output_dir_}/${entity_id}.af.igv.seg"
         File modeled_segments_begin = "${output_dir_}/${entity_id}.modelBegin.seg"
         File copy_ratio_parameters_begin = "${output_dir_}/${entity_id}.modelBegin.cr.param"
         File allele_fraction_parameters_begin = "${output_dir_}/${entity_id}.modelBegin.af.param"
