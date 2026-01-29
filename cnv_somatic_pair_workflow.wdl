@@ -72,13 +72,15 @@ workflow CNVSomaticPairWorkflow {
     #### optional arguments for CollectCounts ####
     ##############################################
     String? collect_counts_format
-    Int? mem_gb_for_collect_counts
+    Int? mem_gb_for_collect_counts_tumor
+    Int? mem_gb_for_collect_counts_normal
 
     #####################################################
     #### optional arguments for CollectAllelicCounts ####
     #####################################################
     String? minimum_base_quality
-    Int? mem_gb_for_collect_allelic_counts
+    Int? mem_gb_for_collect_allelic_counts_tumor
+    Int? mem_gb_for_collect_allelic_counts_normal
 
     ##################################################
     #### optional arguments for DenoiseReadCounts ####
@@ -109,7 +111,10 @@ workflow CNVSomaticPairWorkflow {
     Float? smoothing_threshold_allele_fraction
     Int? max_num_smoothing_iterations
     Int? num_smoothing_iterations_per_fit
-    Int? mem_gb_for_model_segments
+    Int? mem_gb_for_model_segments_tumor
+    Int? mem_gb_for_model_segments_normal
+    Int? extra_disk_for_model_segments_tumor
+    Int? extra_disk_for_model_segments_normal
 
     ######################################################
     #### optional arguments for CallCopyRatioSegments ####
@@ -167,7 +172,7 @@ workflow CNVSomaticPairWorkflow {
             format = collect_counts_format,
             gatk4_jar_override = gatk4_jar_override,
             gatk_docker = gatk_docker,
-            mem_gb = mem_gb_for_collect_counts,
+            mem_gb = mem_gb_for_collect_counts_tumor,
             disk_space_gb = collect_counts_tumor_disk,
             preemptible_attempts = preemptible_attempts
     }
@@ -184,7 +189,7 @@ workflow CNVSomaticPairWorkflow {
             minimum_base_quality =  minimum_base_quality,
             gatk4_jar_override = gatk4_jar_override,
             gatk_docker = gatk_docker,
-            mem_gb = mem_gb_for_collect_allelic_counts,
+            mem_gb = mem_gb_for_collect_allelic_counts_tumor,
             disk_space_gb = collect_allelic_counts_tumor_disk,
             preemptible_attempts = preemptible_attempts
     }
@@ -204,7 +209,7 @@ workflow CNVSomaticPairWorkflow {
     }
 
     Int model_segments_normal_portion = if defined(normal_bam) then ceil(size(CollectAllelicCountsNormal.allelic_counts, "GB")) else 0
-    Int model_segments_tumor_disk = ceil(size(DenoiseReadCountsTumor.denoised_copy_ratios, "GB")) + ceil(size(CollectAllelicCountsTumor.allelic_counts, "GB")) + model_segments_normal_portion + disk_pad
+    Int model_segments_tumor_disk = ceil(size(DenoiseReadCountsTumor.denoised_copy_ratios, "GB")) + ceil(size(CollectAllelicCountsTumor.allelic_counts, "GB")) + model_segments_normal_portion + disk_pad + select_first([extra_disk_for_model_segments_tumor, 0])
     call ModelSegments as ModelSegmentsTumor {
         input:
             entity_id = CollectCountsTumor.entity_id,
@@ -233,7 +238,7 @@ workflow CNVSomaticPairWorkflow {
             num_smoothing_iterations_per_fit = num_smoothing_iterations_per_fit,
             gatk4_jar_override = gatk4_jar_override,
             gatk_docker = gatk_docker,
-            mem_gb = mem_gb_for_model_segments,
+            mem_gb = mem_gb_for_model_segments_tumor,
             disk_space_gb = model_segments_tumor_disk,
             preemptible_attempts = preemptible_attempts
     }
@@ -298,7 +303,7 @@ workflow CNVSomaticPairWorkflow {
                 format = collect_counts_format,
                 gatk4_jar_override = gatk4_jar_override,
                 gatk_docker = gatk_docker,
-                mem_gb = mem_gb_for_collect_counts,
+                mem_gb = mem_gb_for_collect_counts_normal,
                 disk_space_gb = collect_counts_normal_disk,
                 preemptible_attempts = preemptible_attempts
         }
@@ -315,7 +320,7 @@ workflow CNVSomaticPairWorkflow {
                 minimum_base_quality =  minimum_base_quality,
                 gatk4_jar_override = gatk4_jar_override,
                 gatk_docker = gatk_docker,
-                mem_gb = mem_gb_for_collect_allelic_counts,
+                mem_gb = mem_gb_for_collect_allelic_counts_normal,
                 disk_space_gb = collect_allelic_counts_normal_disk,
                 preemptible_attempts = preemptible_attempts
         }
@@ -334,7 +339,7 @@ workflow CNVSomaticPairWorkflow {
                 preemptible_attempts = preemptible_attempts
         }
 
-        Int model_segments_normal_disk = ceil(size(DenoiseReadCountsNormal.denoised_copy_ratios, "GB")) + ceil(size(CollectAllelicCountsNormal.allelic_counts, "GB")) + disk_pad
+        Int model_segments_normal_disk = ceil(size(DenoiseReadCountsNormal.denoised_copy_ratios, "GB")) + ceil(size(CollectAllelicCountsNormal.allelic_counts, "GB")) + disk_pad + select_first([extra_disk_for_model_segments_normal, 0])
         call ModelSegments as ModelSegmentsNormal {
             input:
                 entity_id = CollectCountsNormal.entity_id,
@@ -361,7 +366,7 @@ workflow CNVSomaticPairWorkflow {
                 num_smoothing_iterations_per_fit = num_smoothing_iterations_per_fit,
                 gatk4_jar_override = gatk4_jar_override,
                 gatk_docker = gatk_docker,
-                mem_gb = mem_gb_for_model_segments,
+                mem_gb = mem_gb_for_model_segments_normal,
                 disk_space_gb = model_segments_normal_disk,
                 preemptible_attempts = preemptible_attempts
         }
