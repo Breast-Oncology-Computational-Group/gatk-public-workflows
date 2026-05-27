@@ -216,7 +216,7 @@ task CollectCounts {
     runtime {
         docker: "${gatk_docker}"
         memory: machine_mem_mb + " MB"
-        disks: "local-disk " + select_first([disk_space_gb, ceil(size(bam, "GB")) + 50]) + if use_ssd then " SSD" else " HDD"
+        disks: "local-disk " + select_first([disk_space_gb, ceil(size(bam, "GB")) + 50]) + if select_first([use_ssd, false]) then " SSD" else " HDD"
         cpu: select_first([cpu, 1])
         preemptible: select_first([preemptible_attempts, 5])
     }
